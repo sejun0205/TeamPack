@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>이메일 인증</title>
+</head>
+<body>
+<h2>이메일 인증</h2>
+
+<!-- 에러 메시지 -->
+<div th:if="${error}" style="color:red;">
+    <p th:text="${error}"></p>
+</div>
+
+<form th:action="@{/user/sendCode}" method="post">
+    <label>이메일:</label>
+    <input type="email" name="email" required />
+    <button type="submit">인증번호 받기</button>
+</form>
+</body>
+</html>

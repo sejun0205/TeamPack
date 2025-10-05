@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>인증번호 확인</title>
+</head>
+<body>
+<h2>인증번호 입력</h2>
+
+<!-- 에러 메시지 -->
+<div th:if="${error}" style="color:red;">
+  <p th:text="${error}"></p>
+</div>
+
+<form th:action="@{/user/checkCode}" method="post">
+  <input type="hidden" name="email" th:value="${email}" />
+
+  <label>인증번호:</label>
+  <input type="text" name="code" required />
+  <button type="submit">확인</button>
+</form>
+</body>
+</html>

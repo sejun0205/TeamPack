@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>팀원 초대</title>
+</head>
+<body>
+<h2>팀원 초대</h2>
+
+<form th:action="@{/team/invite}" method="post">
+  <label>초대할 이메일:</label>
+  <input type="email" name="email" required /><br/><br/>
+
+  <label>역할:</label>
+  <input type="text" name="role" required /><br/><br/>
+
+  <!-- teamId는 hidden으로 -->
+  <input type="hidden" name="teamId" th:value="${teamId}" />
+
+  <button type="submit">초대 보내기</button>
+</form>
+
+<a th:href="@{/team/my}">← 내 팀 목록으로</a>
+</body>
+</html>

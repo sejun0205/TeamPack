@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>내 팀 목록</title>
+</head>
+<body>
+<h2>내 팀 목록</h2>
+
+<ul>
+  <li th:each="team : ${teamList}">
+    <span th:text="${team.teamName}"></span>
+    <a th:href="@{/team/detail/{id}(id=${team.teamId})}">상세보기</a>
+  </li>
+</ul>
+
+<a th:href="@{/}">홈으로 돌아가기</a>
+</body>
+</html>

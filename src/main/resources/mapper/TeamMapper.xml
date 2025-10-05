@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="TeamDao">
+
+    <!-- 팀 생성  -->
+    <insert id="insertTeam" parameterType="TeamDto" useGeneratedKeys="true" keyProperty="teamId">
+        INSERT INTO teampack.team (team_name, assignment_title, due_date)
+        VALUES (#{teamName}, #{assignmentTitle}, #{dueDate})
+    </insert>
+
+    <!-- 조원 생성 -->
+    <insert id="insertMember" parameterType="MembersDto">
+        INSERT INTO  teampack.members (user_id, team_id,member_role,member_type)
+        VALUES (#{userId}, #{teamId}, #{memberRole}, #{memberType})
+    </insert>
+
+    <!-- 팀 아이디 조회 -->
+    <select id="selectTeamById" parameterType="long" resultType="org.example.teampack.dto.TeamDto">
+        SELECT * FROM teampack.team WHERE team_id = #{teamId}
+    </select>
+
+    <select id="selectTeamByUserId" parameterType="long" resultType="org.example.teampack.dto.TeamDto">
+        SELECT t.*
+        FROM teampack.team t
+        JOIN teampack.members m ON t.team_id = m.team_id
+        WHERE m.user_id = #{userId}
+    </select>
+
+</mapper>

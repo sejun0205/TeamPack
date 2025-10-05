@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/teampack?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: phj116327@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    cache: false
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: sejun0205@gmail.com
+    password: lvjt baae rwsh xrex
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+mybatis:
+  config-location: classpath:mybatis-config.xml
+  type-aliases-package: org.example.teampack.dto
+  mapper-locations: classpath:mapper/**/*.xml
+
+server:
+  port: 8080
