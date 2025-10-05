@@ -7,13 +7,26 @@
 <body>
 <h2>내 팀 목록</h2>
 
-<ul>
-  <li th:each="team : ${teamList}">
-    <span th:text="${team.teamName}"></span>
-    <a th:href="@{/team/detail/{id}(id=${team.teamId})}">상세보기</a>
+<div th:if="${teams.isEmpty()}">
+  <p>참여 중인 팀이 없습니다.</p>
+</div>
+
+<ul th:if="${!teams.isEmpty()}">
+  <li th:each="team : ${teams}">
+    <p>
+      <strong th:text="${team.teamName}"></strong><br/>
+      과제: <span th:text="${team.assignmentTitle}"></span><br/>
+      마감일: <span th:text="${team.dueDate}"></span><br/>
+
+      <!-- 팀 리더만 초대 링크 보기 -->
+      <a th:if="${team.memberType == 'LEADER'}"
+         th:href="@{/team/invite-form(teamId=${team.teamId})}">
+        팀원 초대
+      </a>
+    </p>
   </li>
 </ul>
 
-<a th:href="@{/}">홈으로 돌아가기</a>
+<a th:href="@{/}">홈으로</a>
 </body>
 </html>

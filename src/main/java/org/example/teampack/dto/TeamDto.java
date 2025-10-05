@@ -10,4 +10,6 @@ public class TeamDto {
     private String teamName;
     private String assignmentTitle;
     private LocalDateTime dueDate;
+    private String memberType;
+
 }
