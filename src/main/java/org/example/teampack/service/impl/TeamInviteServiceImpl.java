@@ -27,9 +27,8 @@ public class TeamInviteServiceImpl implements TeamInviteService {
     @Override
     public void sendInvite(String email, Long teamId, String role) {
         String token = UUID.randomUUID().toString();
-        String value = teamId + ":" + email + ":" + role;
-
-        //  ":" 포함된 key로 수정
+        // "::"로 구분하여 저장 (":"는 이메일에 포함될 수 있음 → 안전한 구분자 사용)
+        String value = teamId + "::" + email + "::" + role;
         redisTemplate.opsForValue().set("invite:" + token, value, TTL_MINUTES, TimeUnit.MINUTES);
 
         String link = "http://localhost:8080/team/invite?token=" + token;
@@ -57,7 +56,8 @@ public class TeamInviteServiceImpl implements TeamInviteService {
         String value = redisTemplate.opsForValue().get(key);
         if (value == null) return false;
 
-        String[] parts = value.split(":");
+        // "::"로 split
+        String[] parts = value.split("::");
         Long teamId = Long.valueOf(parts[0]);
         String invitedEmail = parts[1];
         String role = parts[2];
