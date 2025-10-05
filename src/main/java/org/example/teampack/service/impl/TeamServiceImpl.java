@@ -40,7 +40,22 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public TeamDto getTeamById(Long teamId, Long userId) {
+        TeamDto team = teamDao.selectTeamById(teamId);
+        String memberType = teamDao.selectMemberType(userId,teamId);
+        team.setMemberType(memberType);
+        return team;
+    }
+
+    @Override
     public List<TeamDto> getTeamByUserId(Long userId) {
     return  teamDao.selectTeamByUserId(userId);
     }
+
+
+    @Override
+    public TeamDto getTeamByIdWithMemberType(Long teamId, Long userId) {
+        return teamDao.selectTeamWithMemberType(teamId, userId);
+    }
+
 }

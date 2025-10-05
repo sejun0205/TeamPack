@@ -33,4 +33,20 @@
         JOIN teampack.members m ON t.team_id = m.team_id
         WHERE m.user_id = #{userId}
     </select>
+
+    <select id="selectMemberType" resultType="string">
+        SELECT member_type
+        FROM teampack.members
+        WHERE user_id = #{userId} AND team_id = #{teamId}
+    </select>
+
+    <select id="selectTeamWithMemberType" parameterType="map" resultType="org.example.teampack.dto.TeamDto">
+        SELECT t.team_id, t.team_name, t.assignment_title, t.due_date, m.member_type
+        FROM teampack.team t
+        JOIN teampack.members m ON t.team_id = m.team_id
+        WHERE t.team_id = #{teamId} AND m.user_id = #{userId}
+    </select>
+
+
+
 </mapper>

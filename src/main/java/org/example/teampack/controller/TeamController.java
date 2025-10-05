@@ -33,7 +33,7 @@ public class TeamController {
         UserDto loginUser = (UserDto) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/user/login";
 
-        teamService.createTeamAndLeader(teamDto, loginUser.getUserID(), myRole);
+        teamService.createTeamAndLeader(teamDto, loginUser.getUserId(), myRole);
         return "redirect:/";
     }
 
@@ -59,7 +59,7 @@ public class TeamController {
             return "redirect:/user/login";
         }
 
-        boolean success = teamInviteService.acceptInvite(token, loginUser.getUserID(), loginUser.getUserEmail());
+        boolean success = teamInviteService.acceptInvite(token, loginUser.getUserId(), loginUser.getUserEmail());
         return success ? "redirect:/team/my" : "invite/invalid";
     }
 
@@ -74,7 +74,8 @@ public class TeamController {
         UserDto loginUser = (UserDto) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/user/login";
 
-        TeamDto team = teamService.getTeamById(id);
+        // 수정된 service 메서드 사용
+        TeamDto team = teamService.getTeamByIdWithMemberType(id, loginUser.getUserId());
         model.addAttribute("team", team);
         return "team/detail";
     }
@@ -84,7 +85,7 @@ public class TeamController {
         UserDto loginUser = (UserDto) session.getAttribute("loginUser");
         if (loginUser == null) return "redirect:/user/login";
 
-        List<TeamDto> myTeams = teamService.getTeamByUserId(loginUser.getUserID());
+        List<TeamDto> myTeams = teamService.getTeamByUserId(loginUser.getUserId());
         model.addAttribute("teams", myTeams);
 
         return "team/my";

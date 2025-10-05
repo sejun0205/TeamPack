@@ -16,18 +16,21 @@
 
 <hr/>
 
-<h3>팀원 초대하기</h3>
-<form th:action="@{/team/invite}" method="post">
-  <input type="hidden" name="teamId" th:value="${team.teamId}" />
+<!-- 팀 리더만 초대 폼 보이게 -->
+<div th:if="${team.memberType == 'LEADER'}">
+  <h3>팀원 초대하기</h3>
+  <form th:action="@{/team/invite}" method="post">
+    <input type="hidden" name="teamId" th:value="${team.teamId}" />
 
-  <label for="email">이메일:</label>
-  <input type="email" id="email" name="email" required /><br/><br/>
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" required /><br/><br/>
 
-  <label for="role">역할:</label>
-  <input type="text" id="role" name="role" placeholder="ex. 기획, 프론트엔드" required /><br/><br/>
+    <label for="role">역할:</label>
+    <input type="text" id="role" name="role" placeholder="ex. 기획, 프론트엔드" required /><br/><br/>
 
-  <button type="submit">초대 보내기</button>
-</form>
+    <button type="submit">초대 보내기</button>
+  </form>
+</div>
 
 <hr/>
 

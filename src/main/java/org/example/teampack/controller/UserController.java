@@ -67,7 +67,8 @@ public class UserController {
         }
 
         //회원가입 성공 후 자동 로그인
-        session.setAttribute("loginUser", userDto);
+        UserDto loginUser = userService.findByEmail(userDto.getUserEmail());
+        session.setAttribute("loginUser", loginUser);
 
         // 초대 토큰 처리
         String token = (String) session.getAttribute("pendingInviteToken");
