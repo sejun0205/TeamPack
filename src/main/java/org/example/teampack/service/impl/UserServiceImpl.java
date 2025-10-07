@@ -29,4 +29,9 @@ public class UserServiceImpl implements UserService {
     public UserDto findByEmail(String email) {
         return userDao.selectByEmail(email);
     }
+
+    @Override
+    public UserDto getMyPageInfo(String email) {
+        return userDao.findUserInfoByEmail(email);
+    }
 }

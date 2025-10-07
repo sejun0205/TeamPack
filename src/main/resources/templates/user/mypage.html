@@ -1,0 +1,19 @@
+<!-- templates/user/mypage.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>마이페이지</title>
+</head>
+<body>
+
+<h2>마이페이지</h2>
+
+<p><strong>이름:</strong> <span th:text="${user.userName}"></span></p>
+<p><strong>이메일:</strong> <span th:text="${user.userEmail}"></span></p>
+<p><strong>전화번호:</strong> <span th:text="${user.userPhone}"></span></p>
+
+<a th:href="@{/}">홈으로</a>
+
+</body>
+</html>

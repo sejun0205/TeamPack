@@ -22,4 +22,8 @@ public class UserDao {
 
         return sqlSession.selectOne("UserDao.selectByEmail", email);
     }
+
+    public UserDto findUserInfoByEmail(String email){
+        return sqlSession.selectOne("UserDao.findUserInfoByEmail",email);
+    }
 }

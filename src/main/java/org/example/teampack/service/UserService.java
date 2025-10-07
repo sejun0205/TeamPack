@@ -6,4 +6,5 @@ public interface UserService {
 
     boolean register(UserDto userDto);
     UserDto findByEmail(String email);
+    UserDto getMyPageInfo(String email);
 }

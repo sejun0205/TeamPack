@@ -17,4 +17,11 @@
         SELECT * FROM teampack.users WHERE user_email = #{email}
     </select>
 
+    <!-- 마이페이지용: 이메일로 유저 상세 정보 조회 -->
+    <select id="findUserInfoByEmail" parameterType="String" resultType="UserDto">
+        SELECT user_id, user_email, user_name, user_phone, joined_at
+        FROM teampack.users
+        WHERE user_email = #{email}
+    </select>
+
 </mapper>
