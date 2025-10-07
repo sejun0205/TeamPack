@@ -2,6 +2,7 @@ package org.example.teampack.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.teampack.dto.MembersDto;
 import org.example.teampack.dto.TeamDto;
 import org.example.teampack.dto.UserDto;
 import org.example.teampack.service.TeamInviteService;
@@ -76,7 +77,10 @@ public class TeamController {
 
         // 수정된 service 메서드 사용
         TeamDto team = teamService.getTeamByIdWithMemberType(id, loginUser.getUserId());
+        List<MembersDto> members = teamService.getMembersByTeamId(id);
+
         model.addAttribute("team", team);
+        model.addAttribute("members",members);
         return "team/detail";
     }
 

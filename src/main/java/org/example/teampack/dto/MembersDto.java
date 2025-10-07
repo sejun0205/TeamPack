@@ -10,4 +10,5 @@ public class MembersDto {
     private Long teamId;
     private String memberRole;
     private String memberType;
+    private String userName; 
 }

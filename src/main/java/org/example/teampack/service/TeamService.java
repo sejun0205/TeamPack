@@ -1,5 +1,6 @@
 package org.example.teampack.service;
 
+import org.example.teampack.dto.MembersDto;
 import org.example.teampack.dto.TeamDto;
 
 import java.util.List;
@@ -10,5 +11,6 @@ public interface TeamService {
     TeamDto getTeamById(Long teamId, Long userId);
     List<TeamDto> getTeamByUserId(Long userId);
     TeamDto getTeamByIdWithMemberType(Long teamId, Long userId);
+    List<MembersDto> getMembersByTeamId(Long teamId);
 
 }

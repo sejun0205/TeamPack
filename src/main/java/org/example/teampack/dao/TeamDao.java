@@ -52,4 +52,8 @@ public class TeamDao {
         return sqlSession.selectOne("TeamDao.selectTeamWithMemberType", params);
     }
 
+    public List<MembersDto> selectMembersByTeamId(Long teamId){
+        return sqlSession.selectList("TeamDao.selectMembersByTeamId",teamId);
+    }
+
 }

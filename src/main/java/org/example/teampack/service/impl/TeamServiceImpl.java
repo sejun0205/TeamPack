@@ -58,4 +58,9 @@ public class TeamServiceImpl implements TeamService {
         return teamDao.selectTeamWithMemberType(teamId, userId);
     }
 
+    @Override
+    public List<MembersDto> getMembersByTeamId(Long teamId) {
+        return teamDao.selectMembersByTeamId(teamId);
+    }
+
 }
