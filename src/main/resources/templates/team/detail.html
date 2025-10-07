@@ -19,7 +19,19 @@
 <h3>팀원 목록</h3>
 <ul>
   <li th:each="member : ${members}">
-    <span th:text="${member.userName}"></span> (<span th:text="${member.memberType}"></span>)
+    <span th:text="${member.userName}"></span>
+    (<span th:text="${member.memberType}"></span> / <span th:text="${member.memberRole}"></span>)
+
+    <!-- 팀장만 보이는 '내보내기' 버튼 -->
+    <form th:if="${team.memberType == 'LEADER'}"
+          th:action="@{/team/kick}"
+          method="post"
+          style="display:inline;">
+      <input type="hidden" name="teamId" th:value="${team.teamId}" />
+      <input type="hidden" name="targetUserId" th:value="${member.userId}" />
+      <button type="submit"
+              th:if="${member.memberType != 'LEADER'}">내보내기</button>
+    </form>
   </li>
 </ul>
 
