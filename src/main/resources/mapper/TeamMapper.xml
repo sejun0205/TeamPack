@@ -47,6 +47,13 @@
         WHERE t.team_id = #{teamId} AND m.user_id = #{userId}
     </select>
 
+    <select id="selectMembersByTeamId" parameterType="long" resultType="org.example.teampack.dto.MembersDto">
+        SELECT m.member_id, m.team_id, m.user_id, u.user_name, m.member_type
+        FROM teampack.members m
+        JOIN teampack.users u ON m.user_id = u.user_id
+        WHERE m.team_id = #{teamId}
+    </select>
+
 
 
 </mapper>
