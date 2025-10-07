@@ -2,6 +2,7 @@ package org.example.teampack.controller;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.example.teampack.dto.MembersDto;
 import org.example.teampack.dto.TeamDto;
 import org.example.teampack.dto.UserDto;
@@ -94,4 +95,18 @@ public class TeamController {
 
         return "team/my";
     }
+
+    //팀 내보내기
+    @PostMapping("/kick")
+    public String kickMember(@RequestParam Long teamId, @RequestParam("targetUserId") Long targetUserId,
+                             HttpSession session){
+
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/user/login";
+
+        teamService.kickMember(teamId,targetUserId,loginUser.getUserId()); //팀장인지 확인 필요
+
+        return "redirect:/team/detail/"+teamId;
+    }
+
 }

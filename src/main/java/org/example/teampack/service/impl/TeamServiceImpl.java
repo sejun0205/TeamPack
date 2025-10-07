@@ -63,4 +63,20 @@ public class TeamServiceImpl implements TeamService {
         return teamDao.selectMembersByTeamId(teamId);
     }
 
+    //회원 내보내기
+    @Override
+    public void kickMember(Long teamId, Long targetUserId, Long loginUserId) {
+        //현재 로그인한 사용자의 역할 확인
+        String loginUserRole = teamDao.getMemberType(teamId,loginUserId);
+
+        //리더가 아니면 예외 발생
+        if(!"LEADER".equalsIgnoreCase(loginUserRole)){
+            throw new RuntimeException("팀장만 팀원을 내보낼 수 있습니다.");
+        }
+
+        //팀원 삭베
+        teamDao.deleteMemberFromTeam(teamId,targetUserId);
+    }
+
+
 }

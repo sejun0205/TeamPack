@@ -48,12 +48,24 @@
     </select>
 
     <select id="selectMembersByTeamId" parameterType="long" resultType="org.example.teampack.dto.MembersDto">
-        SELECT m.member_id, m.team_id, m.user_id, u.user_name, m.member_type
+        SELECT m.member_id, m.team_id, m.user_id, u.user_name, m.member_type,m.member_role
         FROM teampack.members m
         JOIN teampack.users u ON m.user_id = u.user_id
         WHERE m.team_id = #{teamId}
     </select>
 
+    <!--팀원 역할 확인 -->
+    <select id="getMemberType" resultType="string" parameterType="map">
+        SELECT  member_type
+        FROM teampack.members
+        WHERE team_id = #{teamId} AND user_id = #{userId}
+    </select>
+
+    <!-- 멤버 삭제 -->
+    <delete id="deleteMemberFromTeam" parameterType="map">
+        DELETE FROM teampack.members
+        WHERE team_id = #{teamId} AND user_id = #{userId}
+    </delete>
 
 
 </mapper>

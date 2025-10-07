@@ -56,4 +56,20 @@ public class TeamDao {
         return sqlSession.selectList("TeamDao.selectMembersByTeamId",teamId);
     }
 
+    //멤버의 역할 가져오기
+    public String getMemberType(Long teamId, Long userId){
+        Map<String, Object> map = new HashMap<>();
+        map.put("teamId",teamId);
+        map.put("userId",userId);
+        return sqlSession.selectOne("TeamDao.getMemberType",map);
+    }
+
+    //멤버 팀에서 삭제
+    public  void deleteMemberFromTeam(Long teamId, Long userId){
+        Map<String,Object> map = new HashMap<>();
+        map.put("teamId",teamId);
+        map.put("userId",userId);
+        sqlSession.delete("TeamDao.deleteMemberFromTeam",map);
+    }
+
 }

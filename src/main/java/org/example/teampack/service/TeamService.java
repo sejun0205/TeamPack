@@ -12,5 +12,6 @@ public interface TeamService {
     List<TeamDto> getTeamByUserId(Long userId);
     TeamDto getTeamByIdWithMemberType(Long teamId, Long userId);
     List<MembersDto> getMembersByTeamId(Long teamId);
+    void  kickMember(Long teamId, Long targetUserId, Long loginUserId);
 
 }
