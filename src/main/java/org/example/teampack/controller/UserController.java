@@ -124,4 +124,19 @@ public class UserController {
         return "redirect:/user/login";
     }
 
+    @GetMapping("/mypage")
+    public String myPage(HttpSession session, Model model){
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+
+        if(loginUser == null){
+            return  "redirect:/user/login";
+        }
+
+        // 기존 세션 객체가 아니라 DB에서 다시 조회해서 최신 정보 반영
+        UserDto fullUserInfo = userService.getMyPageInfo(loginUser.getUserEmail());
+        model.addAttribute("user", fullUserInfo);
+
+        return "user/mypage";
+    }
+
 }
