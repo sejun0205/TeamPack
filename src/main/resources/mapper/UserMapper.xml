@@ -8,8 +8,8 @@
 
     <!--회원가입-->
     <insert id="insertUser" parameterType="UserDto">
-        INSERT INTO teampack.users(user_email, user_password, user_name)
-        VALUES (#{userEmail}, #{userPassword}, #{userName})
+        INSERT INTO teampack.users(user_email, user_password, user_name, user_phone)
+        VALUES (#{userEmail}, #{userPassword}, #{userName}, #{userPhone})
     </insert>
 
     <!-- 이메일 중복 체크 -->

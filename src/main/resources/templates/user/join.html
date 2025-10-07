@@ -23,6 +23,16 @@
   <label>이름:</label>
   <input type="text" name="userName" required /><br/><br/>
 
+  <label>전화번호:</label>
+  <input
+          type="tel"
+          name="userPhone"
+          required
+          pattern="^01[0-9]-\d{3,4}-\d{4}$"
+          placeholder="010-1234-5678"
+          title="010-1234-5678 형식으로 입력해주세요."
+  /><br/><br/>
+
   <button type="submit">가입하기</button>
 </form>
 </body>

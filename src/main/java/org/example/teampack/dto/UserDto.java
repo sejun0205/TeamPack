@@ -14,5 +14,6 @@ public class UserDto {
     private String userEmail;
     private String userPassword;
     private String userName;
+    private String userPhone;
     private LocalDateTime joinedAt;
 }
