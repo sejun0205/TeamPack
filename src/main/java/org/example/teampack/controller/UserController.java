@@ -139,4 +139,65 @@ public class UserController {
         return "user/mypage";
     }
 
+    //회원 정보 수정
+    @GetMapping("/edit")
+    public String showEditForm(HttpSession session, Model model){
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/user/login";
+
+        UserDto user = userService.findByEmail(loginUser.getUserEmail());
+        model.addAttribute("user",user);
+        return "user/edit-profile";
+    }
+
+    @PostMapping("/update")
+    public String updateUserInfo(@ModelAttribute UserDto userDto, HttpSession session){
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/user/login";
+
+        //기존 로그인된 이메일 기준으로 수정
+        userDto.setUserId(loginUser.getUserId());
+        userService.updateUser(userDto);
+
+        //세션 정보 갱신
+        session.setAttribute("loginUser", userService.findByEmail(loginUser.getUserEmail()));
+
+        return "redirect:/user/mypage";
+    }
+
+    // 기존 비밀번호 확인 폼
+    @GetMapping("/change-password")
+    public String showChangePasswordForm(){
+        return "user/change-password-step1";
+    }
+
+    // 기존 비밀번호 검증
+    @PostMapping("/verify-password")
+    public String verifyCurrentPassword(@RequestParam String currentPassword,
+                                        HttpSession session, Model model){
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+        if(loginUser == null) return "redirect:/user/login";
+
+        UserDto user = userService.findById(loginUser.getUserId());
+        if(!user.getUserPassword().equals(currentPassword)){
+            model.addAttribute("error","비밀번호가 일치하지 않습니다.");
+            return "user/change-password-step1";
+        }
+        return "user/change-password-step2";
+
+    }
+    @PostMapping("/update-password")
+    public String updatePassword(@RequestParam String newPassword, HttpSession session){
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+        if(loginUser == null) return "redirect:user/login";
+
+        userService.updatePassword(loginUser.getUserId(), newPassword);
+        return "redirect:/user/mypage";
+    }
+
+
+
+
+
+
 }
