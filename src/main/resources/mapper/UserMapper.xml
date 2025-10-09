@@ -24,4 +24,23 @@
         WHERE user_email = #{email}
     </select>
 
+    <!-- 회원 정보 수정-->
+    <update id="updateUser" parameterType="UserDto">
+        UPDATE teampack.users
+        SET user_name = #{userName},
+            user_phone = #{userPhone}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 비밀번호 변경 -->
+    <update id="updatePassword" parameterType="map">
+        UPDATE teampack.users
+        SET user_password = #{newPassword}
+        WHERE user_id = #{userId}
+    </update>
+
+    <select id="selectById" parameterType="long" resultType="UserDto">
+        SELECT * FROM teampack.users WHERE user_id = #{userId}
+    </select>
+
 </mapper>

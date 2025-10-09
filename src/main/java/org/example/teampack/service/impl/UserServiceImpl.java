@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     private final UserDao userDao;
 
     public UserServiceImpl(UserDao userDao) {
@@ -34,4 +35,22 @@ public class UserServiceImpl implements UserService {
     public UserDto getMyPageInfo(String email) {
         return userDao.findUserInfoByEmail(email);
     }
+
+    // 회원 정보 수정
+    @Override
+    public void updateUser(UserDto userDto) {
+        userDao.updateUser(userDto);
+    }
+
+    //비밀번호 수정
+    @Override
+    public void updatePassword(Long userId, String newPassword) {
+        userDao.updatePassword(userId, newPassword);
+    }
+
+    @Override
+    public UserDto findById(Long userId) {
+        return userDao.findById(userId);
+    }
+
 }
