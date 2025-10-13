@@ -3,11 +3,14 @@ package org.example.teampack.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.teampack.dto.UserDto;
+import org.example.teampack.dto.UserProfileImageDto;
 import org.example.teampack.service.UserEmailService;
+import org.example.teampack.service.UserProfileImageService;
 import org.example.teampack.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/user")
@@ -16,6 +19,7 @@ public class UserController {
 
     private final UserService userService;
     private final UserEmailService userEmailService;
+    private final UserProfileImageService profileImageService;
 
     //인증번호 검증 창
     @GetMapping("/email")
@@ -128,16 +132,25 @@ public class UserController {
     public String myPage(HttpSession session, Model model){
         UserDto loginUser = (UserDto) session.getAttribute("loginUser");
 
-        if(loginUser == null){
-            return  "redirect:/user/login";
+        if (loginUser == null) {
+            return "redirect:/user/login";
         }
 
-        // 기존 세션 객체가 아니라 DB에서 다시 조회해서 최신 정보 반영
+        //  최신 정보로 다시 조회
         UserDto fullUserInfo = userService.getMyPageInfo(loginUser.getUserEmail());
         model.addAttribute("user", fullUserInfo);
 
+        // 프로필 이미지 조회 추가
+        UserProfileImageDto image = profileImageService.getProfileImage(loginUser.getUserId());
+        if (image != null) {
+            model.addAttribute("profileImageUrl", "/uploads/" + image.getUserImageUrl()); // ✅ 경로 보정
+        } else {
+            model.addAttribute("profileImageUrl", null);
+        }
+
         return "user/mypage";
     }
+
 
     //회원 정보 수정
     @GetMapping("/edit")
@@ -196,6 +209,15 @@ public class UserController {
     }
 
 
+    @PostMapping("/upload-profile-image")
+    public String uploadProfileImage(@RequestParam("image")MultipartFile file, HttpSession session){
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/user/login";
+
+        profileImageService.uploadProfileImage(loginUser.getUserId(), file);
+
+        return "redirect:/user/mypage";
+    }
 
 
 

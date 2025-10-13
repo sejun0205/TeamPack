@@ -8,19 +8,40 @@
 
 <h2>마이페이지</h2>
 
+<!-- ✅ 프로필 이미지 표시 영역 -->
+<div>
+  <p><strong>프로필 이미지:</strong></p>
+  <div th:if="${profileImageUrl != null}">
+    <img th:src="@{${profileImageUrl}}" alt="프로필 이미지" width="150" height="150" />
+  </div>
+  <div th:if="${profileImageUrl == null}">
+    <p>등록된 이미지가 없습니다.</p>
+  </div>
+</div>
+
+<!-- ✅ 프로필 이미지 업로드 폼 -->
+<form th:action="@{/user/upload-profile-image}" method="post" enctype="multipart/form-data">
+  <label>이미지 선택:</label>
+  <input type="file" name="image" accept="image/*" required />
+  <button type="submit">이미지 업로드</button>
+</form>
+
+<hr/>
+
+<!-- ✅ 기본 회원 정보 -->
 <p><strong>이름:</strong> <span th:text="${user.userName}"></span></p>
 <p><strong>이메일:</strong> <span th:text="${user.userEmail}"></span></p>
 <p><strong>전화번호:</strong> <span th:text="${user.userPhone}"></span></p>
 
-<!-- 회원정보 수정 링크 -->
-<a th:href="@{/user/edit}">회원정보 수정</a> |
-
+<!-- ✅ 수정 링크 -->
+<p>
+  <a th:href="@{/user/edit}">회원정보 수정</a>
+</p>
 <!-- 비밀번호 변경 페이지 이동 버튼 -->
 <a th:href="@{/user/change-password}">
   <button type="button">비밀번호 변경</button>
 </a>
-
-<br/><br/>
+<br>
 <a th:href="@{/}">← 홈으로</a>
 
 </body>

@@ -40,3 +40,8 @@ mybatis:
 
 server:
   port: 8080
+
+file:
+  upload-dir: build/resources/main/static/uploads
+
+
