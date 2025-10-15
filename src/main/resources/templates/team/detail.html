@@ -3,6 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <title>팀 상세 정보</title>
+  <style>
+    .profile-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    li.member-item {
+      margin-bottom: 12px;
+    }
+  </style>
 </head>
 <body>
 
@@ -18,7 +31,11 @@
 
 <h3>팀원 목록</h3>
 <ul>
-  <li th:each="member : ${members}">
+  <li th:each="member : ${members}" class="member-item">
+    <img th:src="${member.userImageUrl != null} ? ${member.userImageUrl} : '/images/default-profile.png'"
+         alt="프로필 이미지"
+         class="profile-thumb" />
+
     <span th:text="${member.userName}"></span>
     (<span th:text="${member.memberType}"></span> / <span th:text="${member.memberRole}"></span>)
 
