@@ -19,4 +19,12 @@ public class UserProfileImageDao {
         return sqlSession.selectOne("UserProfileImageDao.findByUserId",userId);
     }
 
+    public void updateProfileImage (UserProfileImageDto imageDto){
+        sqlSession.update("UserProfileImageDao.updateProfileImage",imageDto);
+    }
+
+    public void deleteProfileImageByUserId(Long userId){
+        sqlSession.delete("UserProfileImageDao.deleteProfileImageByUserId",userId);
+    }
+
 }

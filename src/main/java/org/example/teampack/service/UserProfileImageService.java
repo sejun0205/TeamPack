@@ -6,4 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UserProfileImageService {
     void uploadProfileImage(Long userId, MultipartFile file);
     UserProfileImageDto getProfileImage(Long userId);
+    void uploadOrUpdateProfileImage(Long userId, MultipartFile file);
+    void deleteProfileImage(Long userId);
 }

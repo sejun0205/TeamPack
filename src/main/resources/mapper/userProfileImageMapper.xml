@@ -14,5 +14,16 @@
         SELECT * FROM teampack.user_profile_images WHERE user_id = #{userId}
     </select>
 
+    <!-- 이미지 수정 -->
+    <update id ="updateProfileImage" parameterType="UserProfileImageDto">
+        UPDATE teampack.user_profile_images
+        SET user_image_url = #{userImageUrl}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 이미지 삭제 -->
+    <delete id = "deleteProfileImageByUserId" parameterType="long">
+        DELETE FROM teampack.user_profile_images WHERE user_id = #{userId}
+    </delete>
 
 </mapper>

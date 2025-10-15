@@ -67,4 +67,38 @@ public class UserProfileImageServiceImpl implements UserProfileImageService {
     public UserProfileImageDto getProfileImage(Long userId) {
         return profileImageDao.findByUserId(userId);
     }
+
+    @Override
+    public void uploadOrUpdateProfileImage(Long userId, MultipartFile file) {
+        if (file.isEmpty()) return;
+
+        //기존 이미지 조회
+        UserProfileImageDto existing = profileImageDao.findByUserId(userId);
+
+        if (existing != null) {
+            deleteProfileImage((userId)); //기존 파일 및 db 삭제
+        }
+
+        // 새로 업로드 (기존 uploadProfileImage 로직 재사용)
+        uploadProfileImage(userId,file);
+    }
+
+    //이미지 삭제 : DB + 실제 파일
+    @Override
+    public void deleteProfileImage(Long userId) {
+        UserProfileImageDto existing = profileImageDao.findByUserId(userId);
+        if(existing == null) return;
+
+        String realPath = System.getProperty("user.dir") + File.separator + uploadDir;
+        File file = new File(realPath, existing.getUserImageUrl());
+
+        if (file.exists()){
+            boolean deleted = file.delete();
+            System.out.println("기존 파일 삭제:"+deleted);
+        }
+
+        profileImageDao.deleteProfileImageByUserId(userId);
+        System.out.println("db 레코드 삭제 완료 ");
+
+    }
 }
