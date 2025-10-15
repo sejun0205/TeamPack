@@ -8,7 +8,7 @@
 
 <h2>마이페이지</h2>
 
-<!-- ✅ 프로필 이미지 표시 영역 -->
+<!-- 프로필 이미지 표시 -->
 <div>
   <p><strong>프로필 이미지:</strong></p>
   <div th:if="${profileImageUrl != null}">
@@ -19,29 +19,47 @@
   </div>
 </div>
 
-<!-- ✅ 프로필 이미지 업로드 폼 -->
-<form th:action="@{/user/upload-profile-image}" method="post" enctype="multipart/form-data">
-  <label>이미지 선택:</label>
-  <input type="file" name="image" accept="image/*" required />
-  <button type="submit">이미지 업로드</button>
-</form>
+<!-- 이미지가 없으면: 이미지 등록 폼만 표시 -->
+<div th:if="${profileImageUrl == null}">
+  <form th:action="@{/user/upload-profile-image}" method="post" enctype="multipart/form-data">
+    <label>이미지 선택:</label>
+    <input type="file" name="image" accept="image/*" required />
+    <button type="submit">이미지 등록</button>
+  </form>
+</div>
+
+<!-- 이미지가 있으면: 이미지 수정/삭제 폼만 표시 -->
+<div th:if="${profileImageUrl != null}">
+  <form th:action="@{/user/update-profile-image}" method="post" enctype="multipart/form-data">
+    <label>이미지 변경:</label>
+    <input type="file" name="image" accept="image/*" required />
+    <button type="submit">이미지 수정</button>
+  </form>
+
+  <form th:action="@{/user/delete-profile-image}" method="post">
+    <button type="submit">이미지 삭제</button>
+  </form>
+</div>
 
 <hr/>
 
-<!-- ✅ 기본 회원 정보 -->
+<!-- 기본 회원 정보 -->
 <p><strong>이름:</strong> <span th:text="${user.userName}"></span></p>
 <p><strong>이메일:</strong> <span th:text="${user.userEmail}"></span></p>
 <p><strong>전화번호:</strong> <span th:text="${user.userPhone}"></span></p>
 
-<!-- ✅ 수정 링크 -->
+<!-- 회원정보 수정 -->
 <p>
   <a th:href="@{/user/edit}">회원정보 수정</a>
 </p>
-<!-- 비밀번호 변경 페이지 이동 버튼 -->
+
+<!-- 비밀번호 변경 -->
 <a th:href="@{/user/change-password}">
   <button type="button">비밀번호 변경</button>
 </a>
 <br>
+
+<!-- 홈으로 -->
 <a th:href="@{/}">← 홈으로</a>
 
 </body>

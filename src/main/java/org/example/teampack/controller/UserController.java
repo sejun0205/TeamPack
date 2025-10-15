@@ -219,6 +219,27 @@ public class UserController {
         return "redirect:/user/mypage";
     }
 
+    //이미지 수정
+    @PostMapping("/update-profile-image")
+    public String updateProfileImage(@RequestParam("image") MultipartFile file, HttpSession session){
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/user/login";
+
+        profileImageService.uploadOrUpdateProfileImage(loginUser.getUserId(), file);
+        return "redirect:/user/mypage";
+    }
+
+    //프로필 이미지 삭제
+    @PostMapping("/delete-profile-image")
+    public String deleteProfileImage(HttpSession session){
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+
+        if(loginUser == null) return "redirect:/user/login";
+
+        profileImageService.deleteProfileImage(loginUser.getUserId());
+        return "redirect:/user/mypage";
+    }
+
 
 
 
