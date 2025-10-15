@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>내 팀 목록</title>
+  <style>
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      color: white;
+    }
+    .badge-progress { background-color: green; }
+    .badge-ended { background-color: gray; }
+  </style>
 </head>
 <body>
 <h2>내 팀 목록</h2>
@@ -20,12 +31,18 @@
       <strong>
         <a th:href="@{/team/detail/{id}(id=${team.teamId})}"
            th:text="${team.teamName}"></a>
-      </strong>
-      <br/>
+      </strong><br/>
 
       과제: <span th:text="${team.assignmentTitle}"></span><br/>
+
       마감일:
       <span th:text="${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></span><br/>
+
+      <!--  상태 표시 -->
+      상태:
+      <span th:text="${team.status}"
+            th:classappend="${team.status == '종료'} ? 'badge badge-ended' : 'badge badge-progress'">
+      </span><br/>
 
       <!-- 팀장만 초대 링크 표시 -->
       <a th:if="${team.memberType == 'LEADER'}"

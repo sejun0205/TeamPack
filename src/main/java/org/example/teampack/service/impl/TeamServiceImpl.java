@@ -10,6 +10,7 @@ import org.example.teampack.service.TeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -50,7 +51,17 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<TeamDto> getTeamByUserId(Long userId) {
-        return teamDao.selectTeamByUserId(userId);
+       List<TeamDto> teams = teamDao.selectTeamByUserId(userId);
+        LocalDateTime now = LocalDateTime.now();
+
+        for (TeamDto team : teams){
+            if (team.getDueDate() != null && team.getDueDate().isBefore(now)){
+                team.setStatus("종료");
+            }else {
+                team.setStatus("진행중");
+            }
+        }
+        return teams;
     }
 
     @Override
@@ -62,7 +73,7 @@ public class TeamServiceImpl implements TeamService {
     public List<MembersDto> getMembersByTeamId(Long teamId) {
         List<MembersDto> members = teamDao.selectMembersByTeamId(teamId);
 
-        // ✅ 각 멤버별 프로필 이미지 세팅 (마이페이지 로직과 동일)
+        //  각 멤버별 프로필 이미지 세팅 (마이페이지 로직과 동일)
         for (MembersDto member : members) {
             UserProfileImageDto imageDto = userProfileImageDao.findByUserId(member.getUserId());
 

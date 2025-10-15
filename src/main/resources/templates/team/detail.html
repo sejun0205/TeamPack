@@ -15,6 +15,16 @@
     li.member-item {
       margin-bottom: 12px;
     }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      color: white;
+    }
+    .badge-progress { background-color: green; }
+    .badge-ended { background-color: gray; }
   </style>
 </head>
 <body>
@@ -25,6 +35,13 @@
   <p><strong>팀 이름:</strong> <span th:text="${team.teamName}"></span></p>
   <p><strong>과제 제목:</strong> <span th:text="${team.assignmentTitle}"></span></p>
   <p><strong>마감일:</strong> <span th:text="${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></span></p>
+
+  <!-- ✅ 상태 출력 -->
+  <p><strong>상태:</strong>
+    <span th:text="${team.status}"
+          th:classappend="${team.status == '종료'} ? 'badge badge-ended' : 'badge badge-progress'">
+    </span>
+  </p>
 </div>
 
 <hr/>
