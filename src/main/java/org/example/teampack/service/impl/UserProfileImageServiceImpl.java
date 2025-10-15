@@ -27,7 +27,7 @@ public class UserProfileImageServiceImpl implements UserProfileImageService {
         if (file.isEmpty()) return;
 
         try {
-            // ⛳ 빌드 디렉토리 기준으로 절대 경로 계산
+            //  빌드 디렉토리 기준으로 절대 경로 계산
             String realPath = System.getProperty("user.dir") + File.separator + uploadDir;
             File directory = new File(realPath);
             if (!directory.exists()) directory.mkdirs();
@@ -55,8 +55,8 @@ public class UserProfileImageServiceImpl implements UserProfileImageService {
             imageDto.setUploadedAt(new Timestamp(System.currentTimeMillis()));
             profileImageDao.insertProfileImage(imageDto);
 
-            System.out.println("✅ 저장 경로: " + dest.getAbsolutePath());
-            System.out.println("✅ 정적 접근 URL: " + urlPath);
+            System.out.println("저장 경로: " + dest.getAbsolutePath());
+            System.out.println(" 정적 접근 URL: " + urlPath);
 
         } catch (IOException e) {
             throw new RuntimeException("프로필 이미지 업로드 실패", e);

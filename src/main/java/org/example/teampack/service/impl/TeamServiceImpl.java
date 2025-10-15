@@ -2,8 +2,10 @@ package org.example.teampack.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.teampack.dao.TeamDao;
+import org.example.teampack.dao.UserProfileImageDao;
 import org.example.teampack.dto.MembersDto;
 import org.example.teampack.dto.TeamDto;
+import org.example.teampack.dto.UserProfileImageDto;
 import org.example.teampack.service.TeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +17,15 @@ import java.util.List;
 public class TeamServiceImpl implements TeamService {
 
     private final TeamDao teamDao;
-
+    private final UserProfileImageDao userProfileImageDao;
 
     @Override
     @Transactional
-    public void createTeamAndLeader(TeamDto teamDto, Long userId,String memberRole) {
-        //1. 팀 생성 (자동으로 teamDto.teamId 채워짐)
+    public void createTeamAndLeader(TeamDto teamDto, Long userId, String memberRole) {
+        // 팀 생성 (자동으로 teamDto.teamId 채워짐)
         teamDao.insertTeam(teamDto);
 
-        //2. 조장 등록
+        // 조장 등록
         MembersDto leader = new MembersDto();
         leader.setUserId(userId);
         leader.setTeamId(teamDto.getTeamId());
@@ -31,7 +33,6 @@ public class TeamServiceImpl implements TeamService {
         leader.setMemberRole(memberRole);
 
         teamDao.insertMember(leader);
-
     }
 
     @Override
@@ -42,16 +43,15 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public TeamDto getTeamById(Long teamId, Long userId) {
         TeamDto team = teamDao.selectTeamById(teamId);
-        String memberType = teamDao.selectMemberType(userId,teamId);
+        String memberType = teamDao.selectMemberType(userId, teamId);
         team.setMemberType(memberType);
         return team;
     }
 
     @Override
     public List<TeamDto> getTeamByUserId(Long userId) {
-    return  teamDao.selectTeamByUserId(userId);
+        return teamDao.selectTeamByUserId(userId);
     }
-
 
     @Override
     public TeamDto getTeamByIdWithMemberType(Long teamId, Long userId) {
@@ -60,23 +60,32 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public List<MembersDto> getMembersByTeamId(Long teamId) {
-        return teamDao.selectMembersByTeamId(teamId);
+        List<MembersDto> members = teamDao.selectMembersByTeamId(teamId);
+
+        // ✅ 각 멤버별 프로필 이미지 세팅 (마이페이지 로직과 동일)
+        for (MembersDto member : members) {
+            UserProfileImageDto imageDto = userProfileImageDao.findByUserId(member.getUserId());
+
+            if (imageDto != null && imageDto.getUserImageUrl() != null) {
+                // DB에는 파일명만 저장되어 있으므로 /uploads/ 경로 붙이기
+                member.setUserImageUrl("/uploads/" + imageDto.getUserImageUrl());
+            } else {
+                // 프로필 이미지 없을 경우 기본 이미지 사용
+                member.setUserImageUrl("/images/default-profile.png");
+            }
+        }
+
+        return members;
     }
 
-    //회원 내보내기
     @Override
     public void kickMember(Long teamId, Long targetUserId, Long loginUserId) {
-        //현재 로그인한 사용자의 역할 확인
-        String loginUserRole = teamDao.getMemberType(teamId,loginUserId);
+        String loginUserRole = teamDao.getMemberType(teamId, loginUserId);
 
-        //리더가 아니면 예외 발생
-        if(!"LEADER".equalsIgnoreCase(loginUserRole)){
+        if (!"LEADER".equalsIgnoreCase(loginUserRole)) {
             throw new RuntimeException("팀장만 팀원을 내보낼 수 있습니다.");
         }
 
-        //팀원 삭베
-        teamDao.deleteMemberFromTeam(teamId,targetUserId);
+        teamDao.deleteMemberFromTeam(teamId, targetUserId);
     }
-
-
 }

@@ -48,9 +48,10 @@
     </select>
 
     <select id="selectMembersByTeamId" parameterType="long" resultType="org.example.teampack.dto.MembersDto">
-        SELECT m.member_id, m.team_id, m.user_id, u.user_name, m.member_type,m.member_role
+        SELECT m.member_id, m.team_id, m.user_id, u.user_name, m.member_type,m.member_role, up.user_image_url
         FROM teampack.members m
-        JOIN teampack.users u ON m.user_id = u.user_id
+        JOIN teampack.users u ON  m.user_id = u.user_id
+        LEFT JOIN teampack.user_profile_images up ON m.user_id = up.user_id
         WHERE m.team_id = #{teamId}
     </select>
 
