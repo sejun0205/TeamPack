@@ -99,4 +99,19 @@ public class TeamServiceImpl implements TeamService {
 
         teamDao.deleteMemberFromTeam(teamId, targetUserId);
     }
+
+    @Override
+    public List<TeamDto> getTeamByUserIdAndStatus(Long userId, String status) {
+       List<TeamDto> teams = teamDao.selectTeamByUserIdAndStatus(userId, status);
+       LocalDateTime now = LocalDateTime.now();
+
+       for (TeamDto team : teams){
+           if(team.getDueDate() != null && team.getDueDate().isBefore(now)){
+               team.setStatus("종료");
+           }else {
+               team.setStatus("진행중");
+           }
+       }
+       return teams;
+    }
 }

@@ -86,12 +86,21 @@ public class TeamController {
     }
 
     @GetMapping("/my")
-    public String myTeamPage(Model model, HttpSession session) {
-        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
-        if (loginUser == null) return "redirect:/user/login";
+    public String myTeamPage(@RequestParam(required = false) String status, Model model, HttpSession session) {
+       UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+       if(loginUser == null) return "redirect:/user/login";
 
-        List<TeamDto> myTeams = teamService.getTeamByUserId(loginUser.getUserId());
-        model.addAttribute("teams", myTeams);
+       List<TeamDto> myTeams;
+
+       if(status == null || status.isBlank()) {
+           //전체 조회
+           myTeams = teamService.getTeamByUserId(loginUser.getUserId());
+       }else {
+           // 필터 조회
+           myTeams = teamService.getTeamByUserIdAndStatus(loginUser.getUserId(),status);
+       }
+       model.addAttribute("teams",myTeams);
+       model.addAttribute("status", status);  //선택값 유지 (탭 활성화 등)
 
         return "team/my";
     }

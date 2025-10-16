@@ -10,41 +10,65 @@
       border-radius: 4px;
       font-weight: bold;
       color: white;
+      font-size: 13px;
     }
-    .badge-progress { background-color: green; }
-    .badge-ended { background-color: gray; }
+    .badge-progress { background-color: #28a745; } /* green */
+    .badge-ended { background-color: #6c757d; }    /* gray */
+
+    .filter-tabs a {
+      text-decoration: none;
+      margin-right: 10px;
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      color: black;
+    }
+    .filter-tabs a.active {
+      background-color: #007bff;
+      color: white;
+    }
   </style>
 </head>
 <body>
+
 <h2>내 팀 목록</h2>
 
-<!-- 참여한 팀이 없을 경우 -->
+<!-- 🔽 필터 탭 -->
+<div class="filter-tabs">
+  <a th:href="@{/team/my}"
+     th:classappend="${status} == null ? 'active' : ''">전체</a>
+
+  <a th:href="@{/team/my(status='진행중')}"
+     th:classappend="${status} == '진행중' ? 'active' : ''">진행중</a>
+
+  <a th:href="@{/team/my(status='종료')}"
+     th:classappend="${status} == '종료' ? 'active' : ''">종료</a>
+</div>
+
+<!-- 🔽 팀 없음 안내 -->
 <div th:if="${teams.isEmpty()}">
   <p>참여 중인 팀이 없습니다.</p>
 </div>
 
-<!-- 참여한 팀 목록 -->
+<!-- 🔽 팀 목록 -->
 <ul th:if="${!teams.isEmpty()}">
-  <li th:each="team : ${teams}">
+  <li th:each="team : ${teams}" style="margin-bottom: 20px;">
     <p>
-      <!-- 팀 제목을 상세페이지 링크로 감싸기 -->
       <strong>
         <a th:href="@{/team/detail/{id}(id=${team.teamId})}"
-           th:text="${team.teamName}"></a>
+           th:text="${team.teamName}">팀 이름</a>
       </strong><br/>
 
-      과제: <span th:text="${team.assignmentTitle}"></span><br/>
+      과제: <span th:text="${team.assignmentTitle}">과제 제목</span><br/>
 
       마감일:
-      <span th:text="${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></span><br/>
+      <span th:text="${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}">마감일</span><br/>
 
-      <!--  상태 표시 -->
       상태:
       <span th:text="${team.status}"
-            th:classappend="${team.status == '종료'} ? 'badge badge-ended' : 'badge badge-progress'">
-      </span><br/>
+            th:classappend="${team.status == '종료'} ? 'badge badge-ended' : 'badge badge-progress'">상태</span><br/>
 
-      <!-- 팀장만 초대 링크 표시 -->
+      <!-- 팀장일 때만 초대 링크 표시 -->
       <a th:if="${team.memberType == 'LEADER'}"
          th:href="@{/team/invite-form(teamId=${team.teamId})}">
         팀원 초대
@@ -54,5 +78,6 @@
 </ul>
 
 <a th:href="@{/}">홈으로</a>
+
 </body>
 </html>

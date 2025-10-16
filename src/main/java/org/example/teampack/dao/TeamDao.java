@@ -72,4 +72,12 @@ public class TeamDao {
         sqlSession.delete("TeamDao.deleteMemberFromTeam",map);
     }
 
+    //마감 상태 필터링
+    public List<TeamDto> selectTeamByUserIdAndStatus(Long userId, String status){
+        Map<String,Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("status",status); //진행중 or 종료
+        return sqlSession.selectList("TeamDao.selectTeamByUserIdAndStatus",map);
+    }
+
 }
