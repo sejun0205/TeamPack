@@ -81,6 +81,7 @@ public class TeamDao {
         return sqlSession.selectList("TeamDao.selectTeamByUserIdAndStatus",map);
     }
 
+    //마감일
     public void updateClosedAt(Long teamId, LocalDateTime closedAt){
         Map<String,Object> params = new HashMap<>();
         params.put("teamId", teamId);
