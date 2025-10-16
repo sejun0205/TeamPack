@@ -34,14 +34,33 @@
 <div>
   <p><strong>팀 이름:</strong> <span th:text="${team.teamName}"></span></p>
   <p><strong>과제 제목:</strong> <span th:text="${team.assignmentTitle}"></span></p>
-  <p><strong>마감일:</strong> <span th:text="${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></span></p>
+  <p><strong>마감일:</strong>
+    <span th:text="${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></span>
+  </p>
 
-  <!--  상태 출력 -->
   <p><strong>상태:</strong>
     <span th:text="${team.status}"
           th:classappend="${team.status == '종료'} ? 'badge badge-ended' : 'badge badge-progress'">
     </span>
   </p>
+
+  <!-- 종료된 경우 종료일 또는 마감일 기반 종료 표시 -->
+  <p th:if="${team.status == '종료'}">
+    <strong>종료일:</strong>
+    <span th:if="${team.closedAt != null}"
+          th:text="${#temporals.format(team.closedAt, 'yyyy년 MM월 dd일 HH시 mm분')}">
+    </span>
+    <span th:if="${team.closedAt == null}"
+          th:text="'마감일 기준 종료 - ' + ${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}">
+    </span>
+  </p>
+
+  <!-- 마감 버튼: 팀장 + 상태 진행중일 때만 표시 -->
+  <form th:if="${team.memberType == 'LEADER' and team.status != '종료'}"
+        th:action="@{/team/close}" method="post">
+    <input type="hidden" name="teamId" th:value="${team.teamId}" />
+    <button type="submit">마감하기</button>
+  </form>
 </div>
 
 <hr/>
@@ -58,13 +77,11 @@
 
     <!-- 팀장만 보이는 '내보내기' 버튼 -->
     <form th:if="${team.memberType == 'LEADER'}"
-          th:action="@{/team/kick}"
-          method="post"
+          th:action="@{/team/kick}" method="post"
           style="display:inline;">
       <input type="hidden" name="teamId" th:value="${team.teamId}" />
       <input type="hidden" name="targetUserId" th:value="${member.userId}" />
-      <button type="submit"
-              th:if="${member.memberType != 'LEADER'}">내보내기</button>
+      <button type="submit" th:if="${member.memberType != 'LEADER'}">내보내기</button>
     </form>
   </li>
 </ul>

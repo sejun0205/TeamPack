@@ -33,7 +33,7 @@
 
 <h2>내 팀 목록</h2>
 
-<!-- 🔽 필터 탭 -->
+<!--  필터 탭 -->
 <div class="filter-tabs">
   <a th:href="@{/team/my}"
      th:classappend="${status} == null ? 'active' : ''">전체</a>
@@ -45,12 +45,12 @@
      th:classappend="${status} == '종료' ? 'active' : ''">종료</a>
 </div>
 
-<!-- 🔽 팀 없음 안내 -->
+<!--  팀 없음 안내 -->
 <div th:if="${teams.isEmpty()}">
   <p>참여 중인 팀이 없습니다.</p>
 </div>
 
-<!-- 🔽 팀 목록 -->
+<!--  팀 목록 -->
 <ul th:if="${!teams.isEmpty()}">
   <li th:each="team : ${teams}" style="margin-bottom: 20px;">
     <p>
@@ -61,8 +61,19 @@
 
       과제: <span th:text="${team.assignmentTitle}">과제 제목</span><br/>
 
-      마감일:
-      <span th:text="${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}">마감일</span><br/>
+      <!-- 마감일 / 종료일 구분 출력 -->
+      <span th:if="${team.status == '종료'}">
+        <span th:if="${team.closedAt != null}">
+          종료일: <span th:text="${#temporals.format(team.closedAt, 'yyyy년 MM월 dd일 HH시 mm분')}"></span>
+        </span>
+        <span th:if="${team.closedAt == null}">
+          마감일 기준 종료: <span th:text="${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}"></span>
+        </span><br/>
+      </span>
+
+      <span th:if="${team.status != '종료'}">
+        마감일: <span th:text="${#temporals.format(team.dueDate, 'yyyy년 MM월 dd일 HH시 mm분')}">마감일</span><br/>
+      </span>
 
       상태:
       <span th:text="${team.status}"

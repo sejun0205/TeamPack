@@ -11,15 +11,14 @@ public class TeamDto {
     private String assignmentTitle;
     private LocalDateTime dueDate;
     private String memberType;
-
+    private LocalDateTime closedAt;
     private String status;
 
     //현재 시간 기준 계산 메서드
-    public String getStatus(){
-        if(dueDate == null){
-            return "미정";
-        }
-        return dueDate.isBefore(LocalDateTime.now()) ? "종료" : "진행중";
-    }
+  public String getStatus(){
+      if (closedAt != null) return "종료";
+      if (dueDate == null) return "미정";
+      return dueDate.isBefore(LocalDateTime.now()) ? "종료" : "진행중";
+  }
 
 }

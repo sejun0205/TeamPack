@@ -118,4 +118,13 @@ public class TeamController {
         return "redirect:/team/detail/"+teamId;
     }
 
+    @PostMapping("/close")
+    public String closeTeam(@RequestParam Long teamId, HttpSession session) {
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+        if(loginUser == null) return "redirect:/user/login";
+
+        teamService.closeTeam(teamId, loginUser.getUserId());
+        return "redirect:/team/detail/" + teamId;
+    }
+
 }

@@ -6,6 +6,7 @@ import org.example.teampack.dto.MembersDto;
 import org.example.teampack.dto.TeamDto;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,13 @@ public class TeamDao {
         map.put("userId", userId);
         map.put("status",status); //진행중 or 종료
         return sqlSession.selectList("TeamDao.selectTeamByUserIdAndStatus",map);
+    }
+
+    public void updateClosedAt(Long teamId, LocalDateTime closedAt){
+        Map<String,Object> params = new HashMap<>();
+        params.put("teamId", teamId);
+        params.put("closedAt", closedAt);
+        sqlSession.update("TeamDao.updateClosedAt",params);
     }
 
 }
