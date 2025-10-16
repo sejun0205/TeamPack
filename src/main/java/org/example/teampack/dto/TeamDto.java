@@ -11,7 +11,7 @@ public class TeamDto {
     private String assignmentTitle;
     private LocalDateTime dueDate;
     private String memberType;
-    private LocalDateTime closedAt;
+    private LocalDateTime closedAt; //db x
     private String status;
 
     //현재 시간 기준 계산 메서드
