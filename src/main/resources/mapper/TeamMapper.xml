@@ -19,18 +19,21 @@
 
     <!-- 팀 아이디 조회 -->
     <select id="selectTeamById" parameterType="long" resultType="org.example.teampack.dto.TeamDto">
-        SELECT * FROM teampack.team WHERE team_id = #{teamId}
+        SELECT team_id, team_name, assignment_title, due_date, closed_at
+        FROM teampack.team
+        WHERE team_id = #{teamId}
     </select>
 
     <select id="selectTeamByUserId" parameterType="long" resultType="org.example.teampack.dto.TeamDto">
         SELECT
-        t.team_id,
-        t.team_name,
-        t.assignment_title,
-        t.due_date,
-        m.member_type   <!-- 추가 -->
+            t.team_id,
+            t.team_name,
+            t.assignment_title,
+            t.due_date,
+            t.closed_at,
+            m.member_type
         FROM teampack.team t
-        JOIN teampack.members m ON t.team_id = m.team_id
+                 JOIN teampack.members m ON t.team_id = m.team_id
         WHERE m.user_id = #{userId}
     </select>
 
@@ -41,10 +44,17 @@
     </select>
 
     <select id="selectTeamWithMemberType" parameterType="map" resultType="org.example.teampack.dto.TeamDto">
-        SELECT t.team_id, t.team_name, t.assignment_title, t.due_date, m.member_type
+        SELECT
+            t.team_id,
+            t.team_name,
+            t.assignment_title,
+            t.due_date,
+            t.closed_at,
+            m.member_type
         FROM teampack.team t
-        JOIN teampack.members m ON t.team_id = m.team_id
-        WHERE t.team_id = #{teamId} AND m.user_id = #{userId}
+                 JOIN teampack.members m ON t.team_id = m.team_id
+        WHERE t.team_id = #{teamId}
+          AND m.user_id = #{userId}
     </select>
 
     <select id="selectMembersByTeamId" parameterType="long" resultType="org.example.teampack.dto.MembersDto">
@@ -75,6 +85,7 @@
         t.team_name,
         t.assignment_title,
         t.due_date,
+        t.closed_at,
         m.member_type
         FROM teampack.team t
         JOIN teampack.members m ON t.team_id = m.team_id
@@ -82,16 +93,22 @@
         <if test="status != null">
             <choose>
                 <when test="status == '진행중'">
+                    AND (t.closed_at IS NULL)
                     AND (t.due_date IS NULL OR t.due_date &gt; NOW())
                 </when>
                 <when test="status == '종료'">
-                    AND t.due_date IS NOT NULL
-                    AND t.due_date &lt;= NOW()
+                    AND (t.closed_at IS NOT NULL OR (t.due_date IS NOT NULL AND t.due_date &lt;= NOW()))
                 </when>
             </choose>
         </if>
-        ORDER BY t.due_date DESC
+        ORDER BY COALESCE(t.closed_at, t.due_date) DESC
     </select>
+
+    <update id="updateClosedAt" parameterType="map">
+        UPDATE teampack.team
+        SET closed_at = #{closedAt}
+        WHERE team_id = #{teamId}
+    </update>
 
 
 </mapper>

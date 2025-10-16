@@ -114,4 +114,15 @@ public class TeamServiceImpl implements TeamService {
        }
        return teams;
     }
+
+    @Override
+    public void closeTeam(Long teamId, Long userId) {
+        String role = teamDao.getMemberType(teamId, userId);
+        if(!"LEADER".equalsIgnoreCase(role)){
+            throw new RuntimeException("팀장만 마감할 수 있습니다.");
+        }
+        teamDao.updateClosedAt(teamId, LocalDateTime.now());
+    }
+
+
 }
