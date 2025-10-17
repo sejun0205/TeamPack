@@ -89,4 +89,35 @@ public class TeamDao {
         sqlSession.update("TeamDao.updateClosedAt",params);
     }
 
+    public List<TeamDto> selectPagedTeams(Long userId, int offset, int limit) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("offset", offset);
+        map.put("limit", limit);
+        return sqlSession.selectList("TeamDao.selectPagedTeams", map);
+    }
+
+    //  페이징된 상태별 팀 조회
+    public List<TeamDto> selectPagedTeamsByStatus(Long userId, String status, int offset, int limit) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("status", status);
+        map.put("offset", offset);
+        map.put("limit", limit);
+        return sqlSession.selectList("TeamDao.selectPagedTeamsByStatus", map);
+    }
+
+    //  전체 팀 수 카운트
+    public int countTeamsByUserId(Long userId) {
+        return sqlSession.selectOne("TeamDao.countTeamsByUserId", userId);
+    }
+
+    //  상태별 팀 수 카운트
+    public int countTeamsByUserIdAndStatus(Long userId, String status) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userId", userId);
+        map.put("status", status);
+        return sqlSession.selectOne("TeamDao.countTeamsByUserIdAndStatus", map);
+    }
+
 }

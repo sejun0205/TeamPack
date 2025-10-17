@@ -86,21 +86,34 @@ public class TeamController {
     }
 
     @GetMapping("/my")
-    public String myTeamPage(@RequestParam(required = false) String status, Model model, HttpSession session) {
-       UserDto loginUser = (UserDto) session.getAttribute("loginUser");
-       if(loginUser == null) return "redirect:/user/login";
+    public String myTeamPage(
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "1") int page,
+            Model model, HttpSession session
+    ) {
+        UserDto loginUser = (UserDto) session.getAttribute("loginUser");
+        if (loginUser == null) return "redirect:/user/login";
 
-       List<TeamDto> myTeams;
+        int pageSize = 5;
+        int offset = (page - 1) * pageSize;
 
-       if(status == null || status.isBlank()) {
-           //전체 조회
-           myTeams = teamService.getTeamByUserId(loginUser.getUserId());
-       }else {
-           // 필터 조회
-           myTeams = teamService.getTeamByUserIdAndStatus(loginUser.getUserId(),status);
-       }
-       model.addAttribute("teams",myTeams);
-       model.addAttribute("status", status);  //선택값 유지 (탭 활성화 등)
+        List<TeamDto> myTeams;
+        int totalCount;
+
+        if (status == null || status.isBlank()) {
+            myTeams = teamService.getPagedTeams(loginUser.getUserId(), offset, pageSize);
+            totalCount = teamService.countTeamsByUserId(loginUser.getUserId());
+        } else {
+            myTeams = teamService.getPagedTeamsByStatus(loginUser.getUserId(), status, offset, pageSize);
+            totalCount = teamService.countTeamsByUserIdAndStatus(loginUser.getUserId(), status);
+        }
+
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+
+        model.addAttribute("teams", myTeams);
+        model.addAttribute("status", status);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
 
         return "team/my";
     }

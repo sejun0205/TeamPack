@@ -27,6 +27,19 @@
       background-color: #007bff;
       color: white;
     }
+
+    .pagination {
+      margin-top: 20px;
+    }
+    .pagination a {
+      margin: 0 5px;
+      text-decoration: none;
+      color: black;
+    }
+    .pagination a.active {
+      font-weight: bold;
+      color: #007bff;
+    }
   </style>
 </head>
 <body>
@@ -35,17 +48,12 @@
 
 <!--  필터 탭 -->
 <div class="filter-tabs">
-  <a th:href="@{/team/my}"
-     th:classappend="${status} == null ? 'active' : ''">전체</a>
-
-  <a th:href="@{/team/my(status='진행중')}"
-     th:classappend="${status} == '진행중' ? 'active' : ''">진행중</a>
-
-  <a th:href="@{/team/my(status='종료')}"
-     th:classappend="${status} == '종료' ? 'active' : ''">종료</a>
+  <a th:href="@{/team/my}" th:classappend="${status} == null ? 'active' : ''">전체</a>
+  <a th:href="@{/team/my(status='진행중')}" th:classappend="${status} == '진행중' ? 'active' : ''">진행중</a>
+  <a th:href="@{/team/my(status='종료')}" th:classappend="${status} == '종료' ? 'active' : ''">종료</a>
 </div>
 
-<!--  팀 없음 안내 -->
+<!-- 팀 없음 안내 -->
 <div th:if="${teams.isEmpty()}">
   <p>참여 중인 팀이 없습니다.</p>
 </div>
@@ -55,13 +63,12 @@
   <li th:each="team : ${teams}" style="margin-bottom: 20px;">
     <p>
       <strong>
-        <a th:href="@{/team/detail/{id}(id=${team.teamId})}"
-           th:text="${team.teamName}">팀 이름</a>
+        <a th:href="@{/team/detail/{id}(id=${team.teamId})}" th:text="${team.teamName}">팀 이름</a>
       </strong><br/>
 
       과제: <span th:text="${team.assignmentTitle}">과제 제목</span><br/>
 
-      <!-- 마감일 / 종료일 구분 출력 -->
+      <!-- 종료 여부에 따라 마감일/종료일 분기 -->
       <span th:if="${team.status == '종료'}">
         <span th:if="${team.closedAt != null}">
           종료일: <span th:text="${#temporals.format(team.closedAt, 'yyyy년 MM월 dd일 HH시 mm분')}"></span>
@@ -79,7 +86,7 @@
       <span th:text="${team.status}"
             th:classappend="${team.status == '종료'} ? 'badge badge-ended' : 'badge badge-progress'">상태</span><br/>
 
-      <!-- 팀장일 때만 초대 링크 표시 -->
+      <!-- 팀장이면 초대 버튼 노출 -->
       <a th:if="${team.memberType == 'LEADER'}"
          th:href="@{/team/invite-form(teamId=${team.teamId})}">
         팀원 초대
@@ -87,6 +94,15 @@
     </p>
   </li>
 </ul>
+
+<!--  페이지네이션 -->
+<div class="pagination" th:if="${totalPages > 1}">
+  <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+    <a th:href="@{/team/my(status=${status}, page=${i})}"
+       th:text="${i}"
+       th:classappend="${i == currentPage} ? 'active' : ''"></a>
+  </span>
+</div>
 
 <a th:href="@{/}">홈으로</a>
 

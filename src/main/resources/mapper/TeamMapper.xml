@@ -110,5 +110,59 @@
         WHERE team_id = #{teamId}
     </update>
 
+    <select id="selectPagedTeams" parameterType="map" resultType="org.example.teampack.dto.TeamDto">
+        SELECT t.team_id, t.team_name, t.assignment_title, t.due_date, t.closed_at, m.member_type
+        FROM teampack.team t
+                 JOIN teampack.members m ON t.team_id = m.team_id
+        WHERE m.user_id = #{userId}
+        ORDER BY COALESCE(t.closed_at, t.due_date) DESC
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!--  페이징된 상태별 팀 목록 -->
+    <select id="selectPagedTeamsByStatus" parameterType="map" resultType="org.example.teampack.dto.TeamDto">
+        SELECT t.team_id, t.team_name, t.assignment_title, t.due_date, t.closed_at, m.member_type
+        FROM teampack.team t
+        JOIN teampack.members m ON t.team_id = m.team_id
+        WHERE m.user_id = #{userId}
+        <choose>
+            <when test="status == '진행중'">
+                AND (t.closed_at IS NULL)
+                AND (t.due_date IS NULL OR t.due_date &gt; NOW())
+            </when>
+            <when test="status == '종료'">
+                AND (t.closed_at IS NOT NULL OR (t.due_date IS NOT NULL AND t.due_date &lt;= NOW()))
+            </when>
+
+        </choose>
+        ORDER BY COALESCE(t.closed_at, t.due_date) DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!--  전체 팀 수 -->
+    <select id="countTeamsByUserId" parameterType="long" resultType="int">
+        SELECT COUNT(*)
+        FROM teampack.team t
+                 JOIN teampack.members m ON t.team_id = m.team_id
+        WHERE m.user_id = #{userId}
+    </select>
+
+    <!--  상태별 팀 수 -->
+    <select id="countTeamsByUserIdAndStatus" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM teampack.team t
+        JOIN teampack.members m ON t.team_id = m.team_id
+        WHERE m.user_id = #{userId}
+        <choose>
+            <when test="status == '진행중'">
+                AND (t.closed_at IS NULL)
+                AND (t.due_date IS NULL OR t.due_date &gt; NOW())
+            </when>
+            <when test="status == '종료'">
+                AND (t.closed_at IS NOT NULL OR (t.due_date IS NOT NULL AND t.due_date &lt;= NOW()))
+            </when>
+        </choose>
+    </select>
+
 
 </mapper>
