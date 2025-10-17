@@ -55,7 +55,7 @@
     </span>
   </p>
 
-  <!-- 마감 버튼: 팀장 + 상태 진행중일 때만 표시 -->
+  <!-- 마감 버튼: 팀장 + 진행중일 때만 표시 -->
   <form th:if="${team.memberType == 'LEADER' and team.status != '종료'}"
         th:action="@{/team/close}" method="post">
     <input type="hidden" name="teamId" th:value="${team.teamId}" />
@@ -88,8 +88,8 @@
 
 <hr/>
 
-<!-- 팀 리더만 초대 폼 보이게 -->
-<div th:if="${team.memberType == 'LEADER'}">
+<!-- ✅ 팀장 + 진행중일 때만 초대 폼 표시 -->
+<div th:if="${team.memberType == 'LEADER' and team.status != '종료'}">
   <h3>팀원 초대하기</h3>
   <form th:action="@{/team/invite}" method="post">
     <input type="hidden" name="teamId" th:value="${team.teamId}" />

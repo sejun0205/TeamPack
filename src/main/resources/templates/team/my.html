@@ -53,7 +53,7 @@
   <a th:href="@{/team/my(status='종료')}" th:classappend="${status} == '종료' ? 'active' : ''">종료</a>
 </div>
 
-<!-- 팀 없음 안내 -->
+<!--  팀 없음 안내 -->
 <div th:if="${teams.isEmpty()}">
   <p>참여 중인 팀이 없습니다.</p>
 </div>
@@ -68,7 +68,7 @@
 
       과제: <span th:text="${team.assignmentTitle}">과제 제목</span><br/>
 
-      <!-- 종료 여부에 따라 마감일/종료일 분기 -->
+      <!-- 마감일 / 종료일 분기 -->
       <span th:if="${team.status == '종료'}">
         <span th:if="${team.closedAt != null}">
           종료일: <span th:text="${#temporals.format(team.closedAt, 'yyyy년 MM월 dd일 HH시 mm분')}"></span>
@@ -86,8 +86,8 @@
       <span th:text="${team.status}"
             th:classappend="${team.status == '종료'} ? 'badge badge-ended' : 'badge badge-progress'">상태</span><br/>
 
-      <!-- 팀장이면 초대 버튼 노출 -->
-      <a th:if="${team.memberType == 'LEADER'}"
+      <!--  팀장 & 종료 아님일 때만 초대 버튼 -->
+      <a th:if="${team.memberType == 'LEADER'} and ${team.status != '종료'}"
          th:href="@{/team/invite-form(teamId=${team.teamId})}">
         팀원 초대
       </a>

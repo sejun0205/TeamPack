@@ -5,6 +5,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.example.teampack.dao.TeamDao;
 import org.example.teampack.dto.MembersDto;
+import org.example.teampack.dto.TeamDto;
 import org.example.teampack.service.TeamInviteService;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -26,11 +27,26 @@ public class TeamInviteServiceImpl implements TeamInviteService {
 
     @Override
     public void sendInvite(String email, Long teamId, String role) {
+
+        //팀 상태 조회
+        TeamDto team = teamDao.selectTeamById(teamId);
+        if(team == null) {
+            throw new RuntimeException("해당 팀을 찾을 수 없습니다.");
+        }
+
+        //종료된 팀은 초대 불가
+        if (team.getClosedAt() != null){
+            throw new IllegalStateException("이미 마감된 팀에는 팀원을 초대할 수 없습니다.");
+        }
+
+
+        //초대 토큰 생성 및 레디스 저장
         String token = UUID.randomUUID().toString();
         // "::"로 구분하여 저장 (":"는 이메일에 포함될 수 있음 → 안전한 구분자 사용)
         String value = teamId + "::" + email + "::" + role;
         redisTemplate.opsForValue().set("invite:" + token, value, TTL_MINUTES, TimeUnit.MINUTES);
 
+        //초대 링크 생성
         String link = "http://localhost:8080/team/invite?token=" + token;
 
         try {
