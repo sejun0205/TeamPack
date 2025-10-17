@@ -124,5 +124,25 @@ public class TeamServiceImpl implements TeamService {
         teamDao.updateClosedAt(teamId, LocalDateTime.now());
     }
 
+    @Override
+    public List<TeamDto> getPagedTeams(Long userId, int offset, int limit) {
+        return teamDao.selectPagedTeams(userId, offset, limit);
+    }
+
+    @Override
+    public List<TeamDto> getPagedTeamsByStatus(Long userId, String status, int offset, int limit) {
+        return teamDao.selectPagedTeamsByStatus(userId, status, offset, limit);
+    }
+
+    @Override
+    public int countTeamsByUserId(Long userId) {
+        return teamDao.countTeamsByUserId(userId);
+    }
+
+    @Override
+    public int countTeamsByUserIdAndStatus(Long userId, String status) {
+        return teamDao.countTeamsByUserIdAndStatus(userId, status);
+    }
+
 
 }

@@ -15,4 +15,8 @@ public interface TeamService {
     void  kickMember(Long teamId, Long targetUserId, Long loginUserId);
     List<TeamDto> getTeamByUserIdAndStatus(Long userId, String status);
     void closeTeam(Long teamId, Long userId);
+    List<TeamDto> getPagedTeams(Long userId, int offset, int limit);
+    List<TeamDto> getPagedTeamsByStatus(Long userId, String status, int offset, int limit);
+    int countTeamsByUserId(Long userId);
+    int countTeamsByUserIdAndStatus(Long userId, String status);
 }
